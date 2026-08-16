@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# PyTorch / model artifacts (can be large — regenerate via train.py instead of committing)
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+
+# Dataset cache (Hugging Face datasets downloads here)
+data/cache/
+.cache/
+datasets_cache/
+
+# Results (regenerate via evaluate.py / plot_pareto.py)
+results/*.png
+results/*.json
+!results/.gitkeep
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+logs/
+wandb/
+runs/
+
+# Env vars / secrets
+.env
+*.env
+
+# OS
+Thumbs.db
+```
+
+**Commit:** `chore: add .gitignore for checkpoints, cache, and results artifacts`
+
+---
+
+Since `.gitignore` excludes `results/`, add a placeholder so the empty folder still shows up in your repo tree on GitHub (folders with nothing in them don't get tracked by git):
+
+### File 15: `results/.gitkeep`
+
+```
