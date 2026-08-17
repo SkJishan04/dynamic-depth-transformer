@@ -70,3 +70,12 @@ pytest tests/
   (soft, exploratory routing) while sharpening decisions later (near-hard,
   confident exits).
 
+## Repo Structure
+
+model/ router, transformer blocks, joint loss
+data/ AG News loader + vocab builder
+utils/ FLOPs / latency estimation
+train.py training loop
+evaluate.py single-tau accuracy / avg-layers / FLOPs-saved report
+plot_pareto.py tau sweep -> Pareto frontier plot
+tests/ unit tests
