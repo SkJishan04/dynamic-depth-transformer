@@ -46,7 +46,8 @@ def encode(text, vocab, max_len):
 
 class AGNewsDataset(Dataset):
     def __init__(self, split, vocab, max_len=128):
-        raw = load_dataset("ag_news", split=split)
+        # raw = load_dataset("ag_news", split=split)
+        raw = load_dataset("fancyzhx/ag_news", split=split)
         self.texts = raw["text"]
         self.labels = raw["label"]
         self.vocab = vocab
@@ -65,7 +66,8 @@ class AGNewsDataset(Dataset):
 
 
 def load_ag_news(vocab_size=30000, max_len=128):
-    train_raw = load_dataset("ag_news", split="train")
+    # train_raw = load_dataset("ag_news", split="train")
+    train_raw = load_dataset("fancyzhx/ag_news", split="train")
     vocab = build_vocab(train_raw["text"], vocab_size=vocab_size)
 
     train_ds = AGNewsDataset("train", vocab, max_len)
