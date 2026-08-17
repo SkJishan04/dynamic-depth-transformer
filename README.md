@@ -79,3 +79,28 @@ train.py training loop
 evaluate.py single-tau accuracy / avg-layers / FLOPs-saved report
 plot_pareto.py tau sweep -> Pareto frontier plot
 tests/ unit tests
+
+## Tech Stack
+
+**Core**
+- **PyTorch** — model, training loop, autograd (Straight-Through Gumbel-Softmax)
+- **Hugging Face `datasets`** — AG News loading
+
+**Techniques**
+- Gumbel-Softmax / Straight-Through Estimator (discrete routing made differentiable)
+- Multi-task joint loss (cross-entropy + latency regularization)
+- Learning-rate warmup, gradient clipping, temperature annealing
+- Analytic FLOPs accounting for compute-savings measurement
+
+**Tooling**
+- `matplotlib` — Pareto frontier visualization
+- `pytest` — unit tests for router correctness and model shape invariants
+- `PyYAML` — config-driven experiments (no hardcoded hyperparameters)
+
+**Badges** (paste at the very top of README, above the title)
+```
+![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.1+-EE4C2C.svg?logo=pytorch)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+![Tests](https://img.shields.io/badge/tests-pytest-yellow.svg)
+```
