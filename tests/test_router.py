@@ -35,7 +35,8 @@ def test_temperature_annealing_bounds():
     t_end = anneal_temperature(10000, temp_start=1.0, temp_min=0.3, anneal_steps=1000)
     assert t0 == 1.0
     assert 0.3 < t_mid < 1.0
-    assert t_end == 0.3
+    # assert t_end == 0.3
+    assert abs(t_end - 0.3) < 1e-9
 
 
 def test_model_forward_shapes_and_valid_layer_counts():
