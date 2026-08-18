@@ -133,3 +133,23 @@ dynamic-depth-transformer/
 
 
 ---
+
+## Usage
+
+```bash
+pip install -r requirements.txt
+
+# Run tests
+python -m pytest tests/ -v
+
+# Train (writes checkpoints/model_epoch{N}.pt each epoch)
+python train.py --config configs/config.yaml
+
+# Evaluate at a single threshold
+python evaluate.py --checkpoint checkpoints/model_epoch8.pt --tau 0.2
+
+# Sweep tau and plot the accuracy-vs-latency Pareto frontier
+python plot_pareto.py --checkpoint checkpoints/model_epoch8.pt
+```
+
+---
