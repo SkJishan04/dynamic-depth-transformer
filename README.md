@@ -162,3 +162,22 @@ python plot_pareto.py --checkpoint checkpoints/model_epoch8.pt
 - **Dataset**: AG News (120,000 train / 7,600 test examples, 4-class topic classification), loaded via `fancyzhx/ag_news` on the Hugging Face Hub.
 
 ---
+
+## Tech Stack
+
+**Core**
+- **PyTorch** — model, training loop, autograd (Straight-Through Gumbel-Softmax)
+- **Hugging Face `datasets`** — AG News loading
+
+**Techniques**
+- Gumbel-Softmax / Straight-Through Estimator (discrete routing made differentiable)
+- Multi-task joint loss (cross-entropy + latency regularization)
+- Gradient clipping, temperature annealing
+- Analytic FLOPs accounting for compute-savings measurement
+
+**Tooling**
+- `matplotlib` — Pareto frontier visualization
+- `pytest` — unit tests for router correctness and model shape invariants
+- `PyYAML` — config-driven experiments (no hardcoded hyperparameters)
+
+---
