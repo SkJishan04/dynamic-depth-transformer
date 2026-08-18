@@ -181,3 +181,7 @@ python plot_pareto.py --checkpoint checkpoints/model_epoch8.pt
 - `PyYAML` — config-driven experiments (no hardcoded hyperparameters)
 
 ---
+
+## License
+
+MIT — see [LICENSE](LICENSE).
