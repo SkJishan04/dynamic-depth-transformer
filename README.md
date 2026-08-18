@@ -72,3 +72,19 @@ At the optimal operating point (**τ = 0.2**):
 The frontier's sweet spot sits at low τ (0.1–0.3): the model reaches **90.8% accuracy using barely a third of the network's depth**, and accuracy stays essentially flat across that whole range while FLOPs savings stay pinned near 64% — a wide, stable operating region rather than a narrow knife-edge tradeoff. This is the practically useful part of the frontier: a deployer can pick any τ in [0.1, 0.3] and get the same accuracy at the same compute cost, with no fine-tuning required.
 
 ---
+
+## Reasoning & Design Decisions
+
+**Why token-level routing, not layer-level or sequence-level?**
+Sequence-level early exit (the whole input exits together) wastes the opportunity that most of the difficulty variance in language lives *within* a sequence, not just across sequences. A sentence like "Apple reported record iPhone revenue" has "reported" and "iPhone" needing very different amounts of contextual reasoning. Token-level routing captures this directly.
+
+**Why Gumbel-Softmax instead of REINFORCE or a fixed heuristic?**
+The exit decision is fundamentally discrete (a token either continues or it doesn't), but discrete decisions block gradient flow. REINFORCE-style policy gradients work but are high-variance and slow to converge. The Straight-Through Gumbel-Softmax estimator gives a low-variance, fully differentiable path: forward pass is (approximately) discrete, backward pass uses the continuous relaxation's gradient. This lets the router train with the same optimizer, same loss surface, and same stability guarantees as the rest of the network — no separate RL loop.
+
+**Why batched masking instead of physically shortening tensors?**
+Physically removing exited tokens mid-batch would require ragged tensors or per-token dynamic batching, which is complex to implement efficiently and doesn't parallelize well on GPU. Instead, this implementation keeps every tensor fully batched and rectangular throughout training; exited tokens are masked and their hidden state frozen (not updated by subsequent layers), while an exact per-token layer-count is tracked in parallel. This gives GPU-efficient training *and* exact, not estimated, compute-accounting at evaluation time — the FLOPs and latency numbers reported are computed from real per-token traversal counts, not approximations.
+
+**Why AG News?**
+A 4-class topic classification task with short, single-sentence inputs is ideal for a first proof-of-concept: it's fast to train (no need for a huge model or dataset to see the routing behavior emerge), has a natural mix of lexically trivial headlines ("Stocks rise today") and genuinely ambiguous ones requiring named-entity and numeric reasoning, and gives a clean accuracy metric for the Pareto frontier.
+
+---
