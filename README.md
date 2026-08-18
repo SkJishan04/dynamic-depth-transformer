@@ -34,3 +34,12 @@ Token x ──► [Layer 1] ──► [Router 1] ──► (Exit Decision?) ─�
 
 
 Each token in a sequence is routed **independently** — a short, common word can exit after 4 layers while a named entity or ambiguous term in the same sentence continues to layer 24. This is the key departure from sequence-level early exit (where the whole input either exits or doesn't): it lets the model allocate compute at the granularity where difficulty actually varies.
+
+## Joint Objective
+
+L_total = L_CE + γ · Σ_{i=1}^{L} (i · P_exit,i)
+
+
+The cross-entropy term drives classification accuracy as usual. The latency term directly charges the model a cost proportional to *how deep* it sends each token — exiting at layer 20 costs 5x more penalty than exiting at layer 4. This means the model isn't just learning to classify; it's learning a **cost-aware policy** that trades off compute against confidence, entirely through gradient descent on a single unified loss.
+
+---
