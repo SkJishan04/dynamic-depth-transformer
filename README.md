@@ -104,3 +104,32 @@ This is a known failure mode in hard-sampled adaptive-depth training, and diagno
 - **Layer-wise auxiliary classification heads**: add an intermediate classification loss at each router checkpoint (not just the final pooled output), so every layer gets direct supervision regardless of how many tokens reach it.
 
 ---
+
+## Project Structure
+
+dynamic-depth-transformer/
+├── configs/
+│ └── config.yaml # model, training, and inference hyperparameters
+├── model/
+│ ├── router.py # Gumbel-Softmax binary exit router
+│ ├── transformer.py # dynamic-depth Transformer w/ masked early exit
+│ └── losses.py # joint CE + latency-penalty loss
+├── data/
+│ └── dataset.py # AG News loader + from-scratch vocab builder
+├── utils/
+│ └── flops.py # analytic FLOPs / latency estimation
+├── tests/
+│ └── test_router.py # unit tests: router shapes, annealing, model forward pass
+├── results/
+│ ├── pareto_frontier.png # accuracy vs. latency plot (generated)
+│ └── pareto_results.json # raw sweep data (generated)
+├── train.py # training loop w/ Gumbel temperature annealing
+├── evaluate.py # single-τ accuracy / avg-layers / FLOPs report
+├── plot_pareto.py # τ sweep -> Pareto frontier plot
+├── conftest.py # pytest path resolution
+├── requirements.txt
+├── LICENSE
+└── README.md
+
+
+---
