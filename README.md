@@ -106,7 +106,7 @@ This is a known failure mode in hard-sampled adaptive-depth training, and diagno
 ---
 
 ## Project Structure
-
+```
 dynamic-depth-transformer/
 ├── configs/
 │ └── config.yaml # model, training, and inference hyperparameters
@@ -130,7 +130,7 @@ dynamic-depth-transformer/
 ├── requirements.txt
 ├── LICENSE
 └── README.md
-
+```
 
 ---
 
