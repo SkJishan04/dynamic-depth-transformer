@@ -26,12 +26,12 @@ Standard Transformers spend the same compute on "the" as on the hardest token in
 ## Core Idea
 
 A lightweight binary router is placed after every 4th Transformer block. At each checkpoint, the router predicts `P(exit)` for every token independently. During training, a **Straight-Through Gumbel-Softmax estimator** makes this discrete exit/continue decision differentiable, so gradients from the downstream classification loss can flow back and shape routing behavior. At inference, tokens exit deterministically once `P(exit)` crosses a threshold **τ**, freezing their representation and skipping all remaining layers — no wasted compute on tokens the model is already confident about.
-
+```
 Token x ──► [Layer 1] ──► [Router 1] ──► (Exit Decision?) ──► Final Classification
 │ (No)
 ▼
 [Layer 2] ──► [Router 2] ──► ...
-
+```
 
 Each token in a sequence is routed **independently** — a short, common word can exit after 4 layers while a named entity or ambiguous term in the same sentence continues to layer 24. This is the key departure from sequence-level early exit (where the whole input either exits or doesn't): it lets the model allocate compute at the granularity where difficulty actually varies.
 
