@@ -153,3 +153,12 @@ python plot_pareto.py --checkpoint checkpoints/model_epoch8.pt
 ```
 
 ---
+
+## Implementation Notes
+
+- **Batched simulated skipping**: training keeps tensors fully batched for GPU efficiency; exited tokens are masked and frozen rather than physically removed. Per-token layer counts are tracked exactly, so FLOPs/latency numbers reported at eval time are accurate, not estimated.
+- **FLOPs accounting** (`utils/flops.py`) uses the standard analytic Transformer-block FLOPs formula, summed per-token over each token's *actual* traversed depth vs. the dense baseline's fixed depth.
+- **Temperature annealing** on the Gumbel-Softmax stabilizes early training (soft, exploratory routing) while sharpening decisions later (near-hard, confident exits) — see `model/router.py::anneal_temperature`.
+- **Dataset**: AG News (120,000 train / 7,600 test examples, 4-class topic classification), loaded via `fancyzhx/ag_news` on the Hugging Face Hub.
+
+---
