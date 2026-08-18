@@ -43,3 +43,17 @@ L_total = L_CE + γ · Σ_{i=1}^{L} (i · P_exit,i)
 The cross-entropy term drives classification accuracy as usual. The latency term directly charges the model a cost proportional to *how deep* it sends each token — exiting at layer 20 costs 5x more penalty than exiting at layer 4. This means the model isn't just learning to classify; it's learning a **cost-aware policy** that trades off compute against confidence, entirely through gradient descent on a single unified loss.
 
 ---
+
+## Results (AG News, 24-layer model, d_model=256, trained 8 epochs)
+
+At the optimal operating point (**τ = 0.2**):
+
+| Metric | Value |
+|---|---|
+| Accuracy | **90.79%** |
+| Avg. layers traversed (all tokens) | 8.57 / 24 |
+| Avg. layers — easy tokens (bottom 25%) | **4.00** |
+| Avg. layers — hard tokens (top 25%) | **22.46** |
+| FLOPs saved vs. dense baseline | **64.31%** |
+
+![Pareto Frontier](results/pareto_frontier.png)
