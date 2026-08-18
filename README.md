@@ -57,3 +57,18 @@ At the optimal operating point (**τ = 0.2**):
 | FLOPs saved vs. dense baseline | **64.31%** |
 
 ![Pareto Frontier](results/pareto_frontier.png)
+
+### Accuracy vs. Latency Sweep
+
+| τ (exit threshold) | Accuracy | Avg. Layers | FLOPs Saved |
+|---|---|---|---|
+| 0.10 | 90.80% | 8.54 | 64.4% |
+| 0.20 | 90.79% | 8.57 | 64.3% |
+| 0.30 | 90.78% | 8.59 | 64.2% |
+| 0.40 | 68.75% | 13.63 | 43.2% |
+| 0.50 | 29.59% | 22.66 | 5.6% |
+| ≥0.60 | ~25.00% | 24.00 | 0.0% |
+
+The frontier's sweet spot sits at low τ (0.1–0.3): the model reaches **90.8% accuracy using barely a third of the network's depth**, and accuracy stays essentially flat across that whole range while FLOPs savings stay pinned near 64% — a wide, stable operating region rather than a narrow knife-edge tradeoff. This is the practically useful part of the frontier: a deployer can pick any τ in [0.1, 0.3] and get the same accuracy at the same compute cost, with no fine-tuning required.
+
+---
