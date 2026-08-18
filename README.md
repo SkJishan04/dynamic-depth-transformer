@@ -88,3 +88,19 @@ Physically removing exited tokens mid-batch would require ragged tensors or per-
 A 4-class topic classification task with short, single-sentence inputs is ideal for a first proof-of-concept: it's fast to train (no need for a huge model or dataset to see the routing behavior emerge), has a natural mix of lexically trivial headlines ("Stocks rise today") and genuinely ambiguous ones requiring named-entity and numeric reasoning, and gives a clean accuracy metric for the Pareto frontier.
 
 ---
+
+## Limitations & Future Work
+
+Pushing τ above ~0.4 causes accuracy to **collapse toward chance (25%, i.e. 1/4 classes)** rather than degrading gracefully — this is the most important finding from this project and worth stating plainly rather than hiding.
+
+**Root cause:** because the router uses *hard* Gumbel-Softmax sampling during training, the vast majority of tokens learn to exit within the first 8–10 layers early in training. This starves layers 9–24 of gradient signal — they rarely see live (non-frozen) tokens during backprop, so they never learn useful transformations. At inference, forcing tokens through those undertrained deep layers (via a high τ) actively hurts rather than helps, since the deep layers are closer to random transformations than learned ones.
+
+This is a known failure mode in hard-sampled adaptive-depth training, and diagnosing it is arguably more valuable for a portfolio than a monotonically clean Pareto curve would have been — it demonstrates the ability to interpret unexpected model behavior rather than just report numbers.
+
+**Planned follow-ups:**
+- **Soft-then-hard curriculum**: keep routing fully soft (weighted mixture of exit/continue, no hard sampling) for the first N epochs so gradient signal reaches every layer regardless of routing decisions, then anneal toward hard decisions later in training.
+- **Depth-balanced batch sampling**: periodically force a fraction of tokens past their preferred exit point during training, ensuring deep layers keep receiving gradient updates even after the router has converged toward early exits.
+- **Per-checkpoint loss weighting**: upweight the CE loss contribution of tokens that exit at deeper checkpoints, counteracting the natural imbalance where few tokens ever reach late layers.
+- **Layer-wise auxiliary classification heads**: add an intermediate classification loss at each router checkpoint (not just the final pooled output), so every layer gets direct supervision regardless of how many tokens reach it.
+
+---
