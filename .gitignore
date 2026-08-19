@@ -38,8 +38,8 @@ data/cache/
 datasets_cache/
 
 # Results (regenerate via evaluate.py / plot_pareto.py)
-results/*.png
-results/*.json
+# results/*.png
+# results/*.json
 !results/.gitkeep
 
 # Jupyter
